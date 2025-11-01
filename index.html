@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Обмен файлами</title>
+</head>
+<body>
+    <div id="start">
+        <h2>Обмен файлами</h2>
+        <p>Ваш ID: <span id="myId"></span></p>
+        <input type="text" id="friendId" placeholder="ID друга">
+        <button onclick="startExchange()">Начать обмен</button>
+    </div>
+
+    <div id="exchange" style="display:none;">
+        <h3>Обмен с <span id="partnerId"></span></h3>
+        <input type="file" id="fileInput">
+        <button onclick="sendFile()">Отправить</button>
+        <div id="files"></div>
+        <button onclick="endExchange()">Завершить</button>
+    </div>
+
+    <script>
+        // Генерируем случайный ID
+        const myId = Math.random().toString(36).substr(2, 9);
+        document.getElementById('myId').textContent = myId;
+
+        let partnerId = null;
+
+        function startExchange() {
+            partnerId = document.getElementById('friendId').value;
+            if (!partnerId) return alert('Введите ID друга');
+            
+            document.getElementById('start').style.display = 'none';
+            document.getElementById('exchange').style.display = 'block';
+            document.getElementById('partnerId').textContent = partnerId;
+        }
+
+        function sendFile() {
+            const fileInput = document.getElementById('fileInput');
+            if (!fileInput.files[0]) return alert('Выберите файл');
+            
+            const file = fileInput.files[0];
+            const fileElement = document.createElement('div');
+            fileElement.innerHTML = `Файл: ${file.name} (${formatSize(file.size)})`;
+            document.getElementById('files').appendChild(fileElement);
+            
+            fileInput.value = '';
+        }
+
+        function endExchange() {
+            document.getElementById('exchange').style.display = 'none';
+            document.getElementById('start').style.display = 'block';
+            document.getElementById('files').innerHTML = '';
+        }
+
+        function formatSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / 1048576).toFixed(1) + ' MB';
+        }
+    </script>
+</body>
+</html>
